@@ -30,7 +30,8 @@ def main():
 
     writer = csv.DictWriter(
         output_file,
-        ['city','temprature_min','temprature_max','weather_condition','early_warning','forecast_date']
+        ['city', 'temprature_min', 'temprature_max',
+            'weather_condition', 'early_warning', 'forecast_date']
     )
     writer.writeheader()
 
@@ -46,15 +47,21 @@ def main():
 
                 for i in range(1, 4):
                     t = forecast_time + datetime.timedelta(days=i-1)
+                    try:
+                        weather_condition = row[f'Wthr{i}'].upper()
+                    except KeyError:
+                        print('unrecognized weather condition:', row[f'Wthr{i}'])
+                        continue
                     output = {
                         'city': city,
                         'temprature_min': float(row[f'Min {i}']),
                         'temprature_max': float(row[f'Max {i}']),
-                        'weather_condition': 0,  # int(row[f'Wthr{i}']),
+                        'weather_condition': weather_condition,
                         'early_warning': '',
                         'forecast_date': t.strftime('%Y-%m-%d 00:00:00'),
                     }
                     writer.writerow(output)
+
 
 class CityLookup:
     def __init__(self, city_file: str):
@@ -69,18 +76,19 @@ class CityLookup:
 
 
 weather_condition = {
-    'Sunny': 1,
-    'Cloudy': 2,
-    'Partial Cloudy': 4,
-    'Rainy': 5,
-    'Stormy': 6,
-    'Rain with Sun': 7,
-    'Heavy Rain': 8,
-    'Rain Showers': 9,
-    'Fog': 14,
-    'Light Rain': 16,
-    'Mostly Sunny': 17
+    'S': 1,  # Sunny
+    'C': 2,  # Cloudy
+    'PC': 4,  # Partial Cloudy
+    'R': 5,  # Rainy
+    # 6, # Stormy
+    # 7, # Rain with Sun
+    # 8, # Heavy Rain
+    # 9, # Rain Showers
+    'F': 14,  # Fog
+    'LR': 16,  # Light Rain
+    'MS': 1,  # Mostly Sunny
 }
+
 
 if __name__ == '__main__':
     main()
