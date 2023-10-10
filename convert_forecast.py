@@ -30,7 +30,7 @@ def main():
 
     writer = csv.DictWriter(
         output_file,
-        ['city', 'temprature_min', 'temprature_max',
+        ['id', 'city', 'temprature_min', 'temprature_max',
             'weather_condition', 'early_warning', 'forecast_date']
     )
     writer.writeheader()
@@ -53,6 +53,7 @@ def main():
                         print('unrecognized weather condition:', row[f'Wthr{i}'])
                         continue
                     output = {
+                        'id': None,
                         'city': city,
                         'temprature_min': float(row[f'Min {i}']),
                         'temprature_max': float(row[f'Max {i}']),
