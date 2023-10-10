@@ -30,7 +30,7 @@ def main():
 
     writer = csv.DictWriter(
         output_file,
-        ['id', 'city', 'temprature_min', 'temprature_max',
+        ['city', 'temprature_min', 'temprature_max',
             'weather_condition', 'early_warning', 'forecast_date']
     )
     writer.writeheader()
@@ -48,12 +48,12 @@ def main():
                 for i in range(1, 4):
                     t = forecast_time + datetime.timedelta(days=i-1)
                     try:
-                        weather_condition = row[f'Wthr{i}'].upper()
+                        weather_condition = weather_conditions[row[f'Wthr{i}'].upper()]
                     except KeyError:
                         print('unrecognized weather condition:', row[f'Wthr{i}'])
                         continue
                     output = {
-                        'id': None,
+                        # 'id': None,
                         'city': city,
                         'temprature_min': float(row[f'Min {i}']),
                         'temprature_max': float(row[f'Max {i}']),
@@ -76,7 +76,7 @@ class CityLookup:
         return self.cities[name.lower().strip()]
 
 
-weather_condition = {
+weather_conditions = {
     'S': 1,  # Sunny
     'C': 2,  # Cloudy
     'PC': 4,  # Partial Cloudy
