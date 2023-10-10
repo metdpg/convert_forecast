@@ -8,4 +8,4 @@ Example usage:
 python3 convert_forecast.py --output-file out.csv --forecast-time "2023-12-23" input.csv
 ```
 
-This will read a forecast from the file `input.csv`, and write to the file `out.csv`. The first day of the forecast will be the 23. of December 2023 (2023-12-23). Any problems when converting the forecast will be written in the terminal.
+This will read a forecast from the file `input.csv`, and write to the file `out.csv`. The first day of the forecast will be December 23, 2023 (2023-12-23). Any problems when converting the forecast will be written in the terminal.
