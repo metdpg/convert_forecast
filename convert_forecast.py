@@ -26,43 +26,35 @@ def main():
 
     output_file = sys.stdout
     if args.output_file:
-        output_file = open(args.output_file, 'w')
+        output_file = open(args.output_file, 'w', newline='')
+
+    writer = csv.DictWriter(
+        output_file,
+        ['city','temprature_min','temprature_max','weather_condition','early_warning','forecast_date']
+    )
+    writer.writeheader()
 
     with output_file:
         with open(args.forecast, newline='') as f:
             reader = csv.DictReader(f, delimiter=',')
             for row in reader:
-                output = Output()
-                # id,city,temprature_min,temprature_max,weather_condition,early_warning,forecast_date
                 try:
-                    output.city = cities.id(row['Weather Location'])
-                    # print(city_id)
+                    city = cities.id(row['Weather Location'])
                 except KeyError as e:
                     print('unkonwn city:', e)
                     continue
 
                 for i in range(1, 4):
-                    output.temprature_min = float(row[f'Min {i}'])
-                    output.temprature_max = float(row[f'Max {i}'])
-                    output.weather_condition = 0  # int(row[f'Wthr{i}'])
-                    output.early_warning = ''
                     t = forecast_time + datetime.timedelta(days=i-1)
-                    output.forecast_date = t.strftime('%Y-%m-%d 00:00:00')
-                    output_file.write(output.csv() + '\n')
-
-
-@dataclass(init=False)
-class Output:
-    city: int
-    temprature_min: float
-    temprature_max: float
-    weather_condition: int
-    early_warning: str
-    forecast_date: str
-
-    def csv(self) -> str:
-        return f'{self.city},{self.temprature_min},{self.temprature_max},{self.weather_condition},{self.early_warning},{self.forecast_date}'
-
+                    output = {
+                        'city': city,
+                        'temprature_min': float(row[f'Min {i}']),
+                        'temprature_max': float(row[f'Max {i}']),
+                        'weather_condition': 0,  # int(row[f'Wthr{i}']),
+                        'early_warning': '',
+                        'forecast_date': t.strftime('%Y-%m-%d 00:00:00'),
+                    }
+                    writer.writerow(output)
 
 class CityLookup:
     def __init__(self, city_file: str):
