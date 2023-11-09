@@ -48,9 +48,11 @@ def main():
                 for i in range(1, 4):
                     t = forecast_time + datetime.timedelta(days=i-1)
                     try:
-                        weather_condition = weather_conditions[row[f'Wthr{i}'].upper()]
+                        weather_condition = weather_conditions[row[f'Wthr{i}'].upper(
+                        )]
                     except KeyError:
-                        print('unrecognized weather condition:', row[f'Wthr{i}'])
+                        print('unrecognized weather condition:',
+                              row[f'Wthr{i}'])
                         continue
                     output = {
                         # 'id': None,
@@ -58,10 +60,18 @@ def main():
                         'temprature_min': float(row[f'Min {i}']),
                         'temprature_max': float(row[f'Max {i}']),
                         'weather_condition': weather_condition,
-                        'early_warning': '',
+                        'early_warning': early_warning(row[f'Wthr{i}'].upper()),
                         'forecast_date': t.strftime('%Y-%m-%d 00:00:00'),
                     }
                     writer.writerow(output)
+
+
+def early_warning(weather_condition: str) -> str:
+    try:
+        return warnings[weather_condition]
+    except KeyError:
+        pass
+    return ''
 
 
 class CityLookup:
@@ -90,6 +100,15 @@ weather_conditions = {
     'MS': 1,  # Mostly Sunny
 }
 
+warnings = {
+    'S': 'Wear breathable cloth and drink plenty of water',
+    'C': 'Bring jacket',
+    'PC': 'Wear light jacket',
+    'R': 'Wear rainy coat and use umbrella',
+    'F': '',
+    'LR': 'Bring umbrella',
+    'MS': 'Wear light cotton cloth'
+}
 
 if __name__ == '__main__':
     main()
