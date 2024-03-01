@@ -17,7 +17,8 @@ def main():
                         help='First day of forecast. Use a format like 2023-10-29')
     parser.add_argument('-o', '--output-file', required=False,
                         help='Write results to this file. If not given, use stdout')
-
+    parser.add_argument('--days', type=int, default=3, 
+                        help='Generate data for this number of days')
     args = parser.parse_args()
 
     forecast_time = datetime.datetime.strptime(args.forecast_time, '%Y-%m-%d')
@@ -45,7 +46,7 @@ def main():
                     print('unkonwn city:', e)
                     continue
 
-                for i in range(1, 4):
+                for i in range(1, args.days+1):
                     t = forecast_time + datetime.timedelta(days=i-1)
                     try:
                         weather_condition = weather_conditions[row[f'Wthr{i}'].upper(
