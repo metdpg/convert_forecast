@@ -41,7 +41,8 @@ def main():
             reader = csv.DictReader(f, delimiter=',')
             for row in reader:
                 try:
-                    city = cities.id(row['Weather Location'])
+                    # city = cities.id(row['Weather Location'])
+                    city = row['Weather Location']
                 except KeyError as e:
                     print('unkonwn city:', e)
                     continue
